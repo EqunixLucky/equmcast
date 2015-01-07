@@ -1,0 +1,171 @@
+<script type="text/javascript">
+    $('#tab_4Reports_4Upload').unbind('click').bind
+    (
+        'click',
+        function()
+        {
+		
+		$('table.uploadtbl').hide();
+		
+		sendRequest(
+			'ajax/common/getJobList2',
+			{'all':1},
+			function(result)
+			{						
+				console.log(result);
+				$("#searchJob").html('');
+				var opt = $('<option>').val('0').html('All Job');
+				$("#uploadJob").append(opt);
+				for (idx in result['joblist'])
+				{
+					opt = $('<option>').val(result['joblist'][idx]['idjob']).html(result['joblist'][idx]['idjob'] + ' - ' + result['joblist'][idx]['jobname']);
+					$("#uploadJob").append(opt);
+				}
+				
+			}
+		)
+		
+		sendRequest(
+			'ajax/common/getUserList',
+			{},
+			function(result)
+			{						
+				//console.log(result);
+				$("#searchUser").html('');
+				var opt = $('<option>').val('0').html('All Users');
+				$("#uploadUser").append(opt);
+				for (idx in result)
+				{
+					opt = $('<option>').val(result[idx]['idlogin']).html(result[idx]['idlogin'] + ' - ' + result[idx]['username']);
+					$("#uploadUser").append(opt);
+				}
+				
+			}
+		)
+		
+		$('#btnUpload').click(
+			function()
+			{
+				$('table.uploadtbl').show();
+				
+				var param = {
+					'uploadDate':$('#uploadDate').val(),
+					'uploadUser':$('#uploadUser').val(),
+					'uploadFileName':$('#uploadFileName').val(),
+					'uploadType':$('#uploadType').val(),
+					'uploadJob':$('#uploadJob').val(),
+				};
+				
+				sendRequest(
+					'ui/4Reports.4Upload/reportinit',
+					param,
+					function(result)
+					{
+						//console.log(result);
+						
+						$('table.uploadtbl').html('');
+						var tr = $('<tr>');
+						tr.append($('<th>').html('No.'));
+						tr.append($('<th>').html('Upl. #'));
+						tr.append($('<th>').html('Date'));
+						tr.append($('<th>').html('User'));
+						tr.append($('<th>').html('File Name'));
+						tr.append($('<th>').html('Row Num.'));
+						tr.append($('<th>').html('First Data Row'));
+						tr.append($('<th>').html('Reff. No.'));
+						tr.append($('<th>').html('Type'));
+						tr.append($('<th>').html('Job #'));
+						$('table.uploadtbl').append(tr);
+						
+						var rownum = 0;
+						for(idx in result)
+						{
+							rownum++;
+							tr = $('<tr>');
+							tr.append($('<td>').html(rownum + '.').css('text-align','right'));
+							for(a=1;a<=9;a++)
+							{
+								var td = $('<td>').html(result[idx][a-1]);
+								tr.append(td);
+							}
+							$('table.uploadtbl').append(tr);
+						}
+						$('table.uploadtbl').show();
+					}
+				)
+				
+			}
+			
+		);
+
+	}
+    );
+</script>
+
+<style>
+	table.uploadtbl tr td, table.uploadtbl tr th
+	{
+		border: 1px solid #C3C3C3;
+		padding: 5px;
+	}
+	
+	table.tblFilter tr th
+	{
+		text-align: right;
+		padding: 3px;
+		margin: 3px;
+	}
+	
+	table.tblFilter tr td
+	{
+		text-align: left;
+		padding: 3px;
+		margin: 3px;
+	}
+	
+	.datepicker
+	{
+		width: 80px;
+	}
+	
+	.datepicker.dropdown-menu
+	{
+		min-width: 180px;
+	}
+	
+	select
+	{
+		height: 25px;
+		line-height: 25px;
+		font-size: 12px;
+	}
+
+</style>
+
+<table class="tblFilter">
+    <tr>
+        <td><input class="uploadElem datepicker" type="text" placeholder="Date" id="uploadDate" /></td>
+        <td>
+            <select class="uploadElem" id="uploadUser" style='width: 120px;'>
+            </select>
+        </td>
+        <td><input class="uploadElem" type="text" placeholder="File Name" id="uploadFileName" style="width: 115px;" /></td>
+        <td>
+            <select class="detailElem" id="uploadType" style='width: 115px;'>
+                <option value="0">All Type</option>
+                <option value="UPLD">UPLOAD</option>
+                <option value="SPLT">SPLIT</option>
+                <option value="ABDN">ABANDON</option>
+            </select>
+        </td>
+        <td>
+            <select class="uploadElem" id="uploadJob" style='width: 115px;'>
+            </select>
+        </td>
+        <td><button id="btnUpload" class="btn btn-info">Search</button></td>
+    </tr>
+</table>
+
+
+<table class="uploadtbl">
+</table>

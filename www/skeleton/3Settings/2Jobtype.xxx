@@ -1,0 +1,19 @@
+<?
+	function jobtypeinit()
+	{
+		global $db, $log, $sid;
+		
+		$sql = 'select idjobtype,typename,typedesc from mjobtype order by idjobtype ;';
+		$rows = $db->getResults($sql,ARRAY_A);
+	
+		$rspcode = 0;
+		$errmsg = '';
+		
+		return array(
+			'rspcode' => $rspcode,	     
+			'errmsg'  => $errmsg,
+			'result'  => $rows);
+		
+		
+	}
+?>

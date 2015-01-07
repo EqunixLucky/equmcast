@@ -1,0 +1,86 @@
+<script type='text/javascript'>
+$('#tab_3Settings_4Restore').unbind('click').bind
+(
+        'click',
+        function()
+        {
+                sendRequest(
+                        'ui/3Settings.4Restore/getBackupFile',
+                        {},
+                        function(result) { getBackupFile(result); }
+                );
+	}
+);
+
+function getBackupFile(result)
+{
+	console.log(result);
+	$('#tblBackup').html('');
+	
+	$('#restore_info').hide();
+	if (result['backlist'].length == 0) {
+		$('#restore_info').html('No backup file');
+		$('#restore_info').show();
+		$('#tblBackup').hide();
+		return false;
+	}
+	
+	for(idx in result['backlist'])
+	{
+		var file = result['backlist'][idx];
+		var btnRestore = $('<button>').addClass('btn btn-info btn_restore').html('Restore');
+		btnRestore.data('fullname',file['fullname']).attr('disabled','disabled');
+%ACL:spv,mgr{btnRestore.removeAttr('disabled');}
+		btnRestore.unbind('click').click
+		(
+			function()
+			{
+				$('#overlayer').show();
+				$('.btn_restore').attr('disabled','disabled');
+				$('.btn_restore').html('Restoring...');
+				sendRequest(
+					'ui/3Settings.4Restore/restore',
+					{
+						'password':$('#restorePasswd').val(),
+						'fullname':$(this).data('fullname'),
+					},
+					function(result)
+					{
+						alert(result['status']);
+						$('.btn_restore').removeAttr('disabled');
+						$('.btn_restore').html('Restore');
+						$('#overlayer').hide();
+					}
+				);
+			}
+		);
+
+		var tr = $('<tr>');
+		var td1 = $('<td>').html(file['type']);
+		var td2 = $('<td>').html(file['date']);
+		var td3 = $('<td>').html(file['hash']);
+		var td4 = $('<td>').append(btnRestore);
+		tr.append(td1).append(td2).append(td3).append(td4);
+		$('#tblBackup').append(tr);
+	}
+}
+</script>
+
+<span style="float:left;"><h3>Restore</h3></span>
+<span style="float:right;margin: 25px 40px 0 0;"><input style="width:135px;" type='password' id='restorePasswd' placeholder="enter your password" value=''></input></span>
+<span id='restore_info'></span>
+<table id='tblBackup' class='table' >
+<tr>
+<td style='width: 400px;' >filename</td>
+<td><button class='btn btn-info'>Restore</button></td>
+</tr>
+<tr>
+<td style='width: 400px;' >filename</td>
+<td><button class='btn btn-info'>Restore</button></td>
+</tr>
+<tr>
+<td style='width: 400px;' >filename</td>
+<td><button class='btn btn-info'>Restore</button></td>
+</tr>
+</table>
+<center><hr style="width: 70%;"/></center>

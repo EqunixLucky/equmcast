@@ -1,0 +1,49 @@
+<script type="text/javascript">
+	$('#tab_3Settings_2Jobtype').unbind('click').bind
+	(
+		'click',
+		function()
+		{
+			sendRequest(
+				'ui/3Settings.2Jobtype/jobtypeinit',
+				{},
+				function(result)
+				{
+					console.log(result);
+					
+					var tr = $('<tr>');
+					tr.append($('<td>').html('ID'));
+					tr.append($('<td>').html('Name'));
+					tr.append($('<td>').html('Desc'));
+					$('#tblJobType').append(tr);
+					
+					
+					for(idx in result)
+					{
+						tr = $('<tr>');
+						tr.append($('<td>').html(result[idx]['idjobtype']));
+						tr.append($('<td>').html(result[idx]['typename']));
+						tr.append($('<td>').html(result[idx]['typedesc']));
+						$('#tblJobType').append(tr);
+					}
+				}
+			)
+
+		}
+	);
+</script>
+
+<style>
+
+	table#tblJobType tr td,table#tblJobType tr th
+	{
+		padding : 5px;
+		vertical-align: top;
+	}
+
+</style>
+<div id="jobtypelist">
+	<table id="tblJobType" border="1">
+	
+	</table>
+</div>

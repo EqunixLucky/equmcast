@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>EQUMCAST&trade; System</title>
+	<link rel='stylesheet' href='static/equfw/ui/framework.css' />
+	<link rel='stylesheet' href='static/equfw/bootstrap/css/datepicker.css' />
+	<link rel='stylesheet' href='static/equfw/bootstrap/css/bootstrap.min.css' />
+	<link rel='stylesheet' href='static/equfw/bootstrap/css/bootstrap-theme.min.css' />
+	<link rel='stylesheet' href='static/apps/apps.css'/>
+	<link rel='shortcut icon' href='static/apps/favicon.ico' />
+	<script type='text/javascript' src='static/equfw/ui/framework.js'></script>
+	<script type='text/javascript' src='static/equfw/ui/hb.js'></script>
+	<script type='text/javascript' src='static/equfw/ui/jquery.1.7.js'></script>
+	<script type="text/javascript" src='static/equfw/ui/swfupload.js' ></script>
+	<script type="text/javascript" src='static/equfw/ui/swfuploadhandlers.js' ></script>
+	<script type='text/javascript' src='static/equfw/bootstrap/js/bootstrap-modal.js'></script>
+	<script type='text/javascript' src='static/equfw/bootstrap/js/bootstrap-datepicker.js'></script>
+	<script type='text/javascript' src='static/equfw/bootstrap/js/bootstrap-collapse.js'></script>
+	<script type='text/javascript' src='static/apps/apps.js'></script>
+	<script type='text/javascript' src='static/apps/modernizr.min.js'></script>
+	
+	<!-- daniel - style untuk change password -->
+	<style type='text/css'>
+		.pad
+		{
+			font-weight: bold;
+			height: 50px;
+			width: 50px !important;
+			border-radius: 15px;
+		}
+		.numpad
+		{
+			font-size: 1.8em;
+		}
+		.funcpad
+		{
+			font-size: 13px;
+		}
+		#newPasswordInput, #newPasswordInput2, #usernameInput
+		{
+			font-size: 2em !important;
+			width: 300px !important;
+			height: 50px !important;
+			border-radius: 10px;
+		}
+		#prevContent
+		{
+			margin: 5px;
+			max-height: 335px;
+			overflow: auto;
+			font-family: monospace;
+		}
+		#overlayer {
+			background-color: rgba(0, 0, 0, 0.2);
+			z-index: 9999;
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			display: none;
+		}
+	</style>
+	
+</head>
+<body>
+	<div id="overlayer">&nbsp;</div>
+<!-- HEADER DIV    ************************************************************************************-->	
+	<div id='header'>
+		<div id='headerContent'>
+			<img id='headerLogo' src='static/apps/header_1.jpg'>
+			<span id='headerGreet'>
+				<!--Welcome, <span id='userName'>%USERNAME</span>&nbsp;
+				<button type='button' class='btn btn-info' id='chgPass' data-toggle='modal' data-target='#chgPassCnt' >Change Password</button>
+				<button type='button' class='btn btn-success' id='uploadFile' data-toggle='modal' data-target='#fileUploader' >Upload File</button>
+				<button type='button' class='btn btn-inverse' id='logout' >Logout</button>
+				// -->
+			</span>
+		</div>
+	</div>
+<!-- HEADER DIV    ************************************************************************************-->	
+
+
+
+<!-- NAVI  DIV    ************************************************************************************-->	
+	<div id='navigation'>
+		<img id='imgNavigation' src='static/apps/header_2.png' style="margin-left:0px;">
+		<div id='contentNavigation' >
+%TABMENU
+		</div>
+	</div>
+<!-- NAVI  DIV    ************************************************************************************-->	
+
+
+<!-- CONTENT DIV    ************************************************************************************-->	
+	<div id='contents' >
+%MAINMENU
+%PAGECONTENT
+	</div>
+<!-- CONTENT DIV    ************************************************************************************-->	
+	
+	<!--<div id='footer'>
+		<div id='footerFrame'>
+			<p id='footerSideLeft'>
+			    Powered by Equnix Business Solutions, PT (http://www.equnix.co.id)
+			</p>
+			<p id='footerSideRight'>
+			   Copyright &copy; 2013 Equnix Business Solutions, PT. All Right Reserved.
+			</p>
+		</div>
+	</div>
+	-->
+	
+	<div id='filePrevCnt' class='modal hide fade' data-backdrop='true' >
+		<div class='modal-header'>
+			<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
+			<h4>Change Password</h4>
+		</div>
+		<div id="prevContent">
+		</div>
+		<div class='modal-footer'>
+			<span></span><br/>
+			<button type='button' class='btn btn-primary' id='btnAssignPrev' >Continue</button>
+			<button type='button' class='btn btn-primary' id='btnClosePrev' >Cancel</button>
+		</div>
+	</div>
+
+	
+	<div id='chgPassCnt' class='modal hide fade' data-backdrop='true' >
+		<div class='modal-header'>
+			<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
+			<h4>Change Password</h4>
+		</div>
+	    <table width='100%' cellpadding=8>
+		<tr>
+			<td>
+				<input class="chgpassinput" type='text' id='usernameInput' placeholder="New User Name" value='%USERNAME'></input>
+			</td>
+			<td rowspan="6" style="background: #F5F5F5;box-shadow: 0 1px 0 #FFFFFF inset;">
+				<table align="center" cellpadding="5">
+					<tr>
+						<td><input class="pad numpad" type="button" value="1" /></td>
+						<td><input class="pad numpad" type="button" value="2" /></td>
+						<td><input class="pad numpad" type="button" value="3" /></td>
+					</tr>
+					<tr>
+						<td><input class="pad numpad" type="button" value="4" /></td>
+						<td><input class="pad numpad" type="button" value="5" /></td>
+						<td><input class="pad numpad" type="button" value="6" /></td>
+					</tr>
+					<tr>
+						<td><input class="pad numpad" type="button" value="7" /></td>
+						<td><input class="pad numpad" type="button" value="8" /></td>
+						<td><input class="pad numpad" type="button" value="9" /></td>
+					</tr>
+					<tr>
+						<td><input id="btnClear" class="pad funcpad" type="button" value="Clear" /></td>
+						<td><input class="pad numpad" type="button" value="0" /></td>
+						<td><input class="pad funcpad" type="button" value="Del" /></td>
+					</tr>
+				</table>
+			
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<input class="chgpassinput" type='password' id='newPasswordInput' placeholder="New Password"></input>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<input class="chgpassinput" type='password' id='newPasswordInput2' placeholder="Confirmation"></input>
+			</td>
+		</tr>
+		<tr><td>&nbsp;</td></tr>
+		<tr><td>&nbsp;</td></tr>
+	    </table>
+	    <div class='modal-footer'>
+		<button type='button' class='btn btn-primary' id='btnChgPass' >Save</button>
+	    </div>
+	</div>
+	
+	<div id='fileUploader' class='modal hide fade' data-backdrop='true' >
+		<div class='modal-header'>
+		    <button type='button' class='close' data-dismiss='modal' aria-hidden='true' >&times;</button>
+		    <h4>Upload File</h4>
+		</div>
+		<div class='modal-body'   >
+			<div id='spanButtonPlaceholder'></div>
+			<div id='divFileProgressContainer' ></div>
+		</div>
+	    <div class='modal-footer' >
+		<button type='button' class='close' data-dismiss='modal' class='btn btn-primary' id='BtnfileUploadClose'>Close</button>
+	    </div>
+	</div>
+
+
+	
+	<!--<div id='footer' align='center' >
+	All Right Reserved, Copyright &copy; 2007-2014. Equnix Business Solutions - Pusat Niaga ITC Roxy Mas Blok C2/42 Jakarta Pusat - Indonesia, <a href=  \>http://www.equnix.co.id</a></div>-->
+	<script type='text/javascript'>$(document).ready(function(){frameworkInit();});</script>
+	
+	<script type='text/javascript'>
+		$(function() {
+			$('.chgpassinput').focus(function() {
+				$('.chgpassinput').removeClass('input');
+				$('.chgpassinput').parent('td').css('background','none');
+				$(this).addClass('input');
+				$(this).parent('td').css('background','#F5F5F5');
+			}
+			);
+			
+			//$('.chgpassinput').blur(function() {
+			//	$('.chgpassinput').removeClass('input');
+			//	$('.chgpassinput').parent('td').css('background','none');
+			//}
+			//);
+			
+			$('.pad.numpad').click(function() {
+				var tmp = $('.chgpassinput.input').val();
+				tmp += $(this).val();
+				$('.chgpassinput.input').val(tmp);
+			}
+			);
+			
+			$('#btnClosePrev').click(function () {
+				$('#filePrevCnt').modal('hide');
+			}
+			)
+			
+		}
+		);
+	</script>
+</body>
+</html>
+
+

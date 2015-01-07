@@ -1,0 +1,125 @@
+.content_wrapper
+{
+    position: relative;
+    width: 750px;
+    height: inherit;
+    float:left;
+    padding: 20px 20px 20px 20px;
+}
+/*--------------------------------Overview Active css-------------------------------*/
+.wrapper_overviewactive
+{
+    position:relative;
+    width:770px;
+    height:400px;
+}
+.overview_active
+{
+    position:relative;
+    width:165px;
+   
+    padding:10px;
+    margin-left:10px;
+    float:left;
+    background-color:#9bc3f4;
+}
+
+
+#overview_1
+{
+    margin-left:0px !important;
+}
+.overview_print
+{
+    position:relative;
+    width:165px;
+    float:left;
+}
+.overview_camera
+{
+    position:relative;
+    width:165px;
+    margin-top:10px;
+    float:left;
+}
+
+.text_printer
+{
+    font-size:8pt;
+}
+
+.button
+{
+    position: relative;
+    
+    float: right;
+    padding-top:20px;
+    padding-bottom:20px;
+}
+
+/*--------------------------------Overview All css-------------------------------*/
+.all_printcamera
+{
+    position:relative;
+    width:770px;
+    height:150px;
+}
+
+
+
+/*--------------------------------Inventory Printer css-------------------------------*/
+
+.table_inventory
+{
+    font-size: 12px;
+    width: 770px;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+.table_inventory th
+{
+    font-weight: normal;
+    font-size: 12px;
+    color: #039;
+    background: #b9c9fe;
+    padding: 8px;
+}
+
+.table_inventory td
+{
+    background: #e8edff;
+    border-top: 1px solid #fff;
+    color: #669;
+    padding: 8px;
+}
+
+/*--------------------------------Monitoring css-------------------------------*/
+.monitoring_printer
+{
+    position:relative;
+    height:115px;
+   
+}
+
+.monitoring_camera
+{
+    position:relative;
+    height:115px;
+}
+
+.images_bigprinter
+{
+    position:relative;
+    float:left;
+}
+
+.graph
+{
+    position:relative;
+    width:190px;
+    height:100px;
+    background-color:#9bc3f4;
+    margin-left:15px;
+    float:right;
+}

@@ -1,0 +1,43 @@
+<script type='text/javascript'>
+$('#tab_3Settings_2Backup').unbind('click').bind
+(
+        'click',
+        function()
+        {
+		sendRequest(
+			'ui/3Settings.2Backup/init',
+			{},
+			function(result)
+			{
+				$("#lastinc").html(result);
+			}
+		);
+
+		$('#btnFullBack').unbind('click').bind(
+			'click',
+			function() {
+				window.open('download/3Settings.2Backup/fullBack');
+			}
+		);
+		
+		$('#btnIncBack').unbind('click').bind(
+			'click',
+			function() {
+				window.open('download/3Settings.2Backup/incBack');
+			}
+		);
+		
+	}
+);
+</script>
+
+<h3>Backup</h3>
+<table class='table' >
+<tr>
+<td><button class='btn btn-info' style='width: 150px' id='btnFullBack'>Full Backup</button></td>
+</tr>
+<tr>
+<td><button class='btn btn-info' style='width: 150px' id='btnIncBack'>Incremental Backup</button>&nbsp;&nbsp;(last backup : <span id="lastinc">9999-99-99</span>)</td>
+</tr>
+</table>
+<center><hr style="width: 70%;"/></center>

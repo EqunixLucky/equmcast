@@ -1,0 +1,152 @@
+<script type='application/javascript' >
+	
+	$('#tab_1Upload_2Monitoring').unbind('click').bind('click',
+		function()
+		{
+			
+		}
+	);
+	
+	$('#btnAbort').unbind('click').bind('click',
+		function()
+		{
+			sendRequest
+			(
+				'ui/1Upload.2Upload_Status/abort',
+				{},
+				function(result)
+				{
+					$('#btnAbort').attr('disabled', 'disabled').html('Sending Aborted');
+					_hb.stop();
+				}
+			);
+		}
+	)
+	
+	function checkSendStatus()
+	{
+		$('#totalProgress .bar, #transferProgress .bar').data('done', false).css("width", "0%").html('');
+		$('#cList').html('');
+		
+		_hb.stop();
+		_hb.addPayload
+		(
+			'heartbeat',
+			'1Upload.2Upload_Status/sendstatus',
+			{},
+			function(result)
+			{
+				$('#fInfo').html
+				(
+					result['filename'] + ' ('+ result['size'] + ' bytes)' +
+					(result['duration'] != '0' ? '&nbsp;&nbsp;Finished in ' + result['duration'] + ' seconds': '')
+				);
+				
+				var clients = result['clients'];
+				var clientsComplete = 0;
+				for(var idx in clients)
+				{
+					var cid = clients[idx]['id'];
+					if($('#client_' + cid).length == 0)
+					{
+						var client = $('<div>');
+						client.css({'float':'left', 'margin-right':'20px', 'width':'370px'});
+						
+						var cled = $('<div>');
+						cled.attr('id', 'client_' + cid);
+						cled.css({'height':'32px', 'width':'24px', 'margin-top':'-8px', 'float':'left'});
+						
+						var cText = $('<span>');
+						cText.html("C: " + clients[idx]['ip']);
+						cText.css({'width': '75px', 'margin-left': '5px', 'float':'left'});
+						
+						var cProgress = $('<div>');
+						cProgress
+						.addClass('progress progress-success')
+						.css('width', '265px')
+						.attr('id', 'progress_' + cid)
+						.append($('<div>').addClass('bar'));
+						
+						client.append(cled);
+						client.append(cText);
+						client.append(cProgress);
+						
+						$('#cList').append(client);
+					}
+					
+					var c = $('#client_' + cid);
+					var clientProgress = clients[idx]['progress'].toFixed(2);
+					
+					switch(clients[idx]['status'])
+					{
+						case 0: c.css('background', 'url("static/apps/1Upload/led.png") no-repeat -50px 5px'); break;
+						case 1: c.css('background', 'url("static/apps/1Upload/led.png") no-repeat -26px 5px'); clientsComplete++; clientProgress = 100; break;
+						case 2: c.css('background', 'url("static/apps/1Upload/led.png") no-repeat 0px 5px'); break;
+					}
+					
+					$('#progress_' + cid + ' .bar')
+					.css('width', clientProgress + '%')
+					.html(clientProgress + '%');
+				}
+				
+				// TRANSFER PROGRESS
+				var transferProgress = '00.00%';
+				if (result['totalsection'] < 1) { result['currsection'] = -1; result['totalsection'] = 1; } 
+				var tp = (((result['currsection'] + 1) / result['totalsection']) * 100);
+				
+				if (result['loop'] < 2) transferProgress = (tp < 10 ? '0' : '') + tp.toFixed(2) + '%';
+				else transferProgress = '100.00%';
+				
+				$('#transferProgress .bar').css('width', transferProgress);
+				$('#transferText').html(transferProgress + ' ETA ' + result['transfereta']);
+				
+				// OVERALL PROGRESS
+				var totalProgress = ((clientsComplete / clients.length) * 100).toFixed(2) + '%';
+				if (clientsComplete == 0)totalProgress = '00.00%';
+				
+				$('#totalProgress .bar').css('width', totalProgress);
+				$('#totalText').html(totalProgress + ' ETA ' + result['transfereta']);
+				
+				// STOPS IF COMPLETED
+				if (clientsComplete == clients.length && clientsComplete > 0)
+				{
+					$('#totalProgress .bar').data('done', true);
+					_hb.stop();
+					$('.filediv button').removeAttr('disabled').removeClass('btn-info').addClass('btn-success').html('Send');
+				}
+			}
+		);
+		setTimeout(function(){_hb.run();}, 500);
+		
+		/*$('#tab_1Upload_1Upload_File').unbind('click').bind('click',
+			function()
+			{
+				if(!$('#totalProgress .bar').data('done')) alert("Entering other tab will make monitoring stops before completed");
+			}
+		);*/
+	}
+	
+</script>
+
+<style type='text/css' >
+
+</style>
+
+<div id="clientList">
+	Filename:&nbsp;<span id = "fInfo"></span>
+	<button id="btnAbort"style="float:right; margin-top:-5px;" class="btn btn-danger">Abort</button>
+	<hr style="margin: 10px 0 !important;"/>
+	Transfer Progress:
+	<div id = "transferProgress" class="progress progress-info" style="height:40px;">
+		<div class="bar" style="padding-top: 10px;"></div>
+		<span id="transferText" style="font-size: 35px; position:absolute; left:400px; top:97px; font-family: monospace;"></span>
+	</div>
+	Overall Progress:
+	<div id = "totalProgress" class="progress progress-warning" style="height:40px;">
+		<div class="bar" style="padding-top: 10px;"></div>
+		<span id="totalText" style="font-size: 35px; position:absolute; left:400px; top:177px; font-family: monospace;"></span>
+	</div>
+	<div id = "cList">
+		
+	</div>
+</div>

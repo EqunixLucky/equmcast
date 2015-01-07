@@ -1,0 +1,77 @@
+<script type='application/javascript' >
+	$(document).ready
+	(
+		function()
+		{
+			sendRequest
+			(
+				'ui/1Upload.1Upload_File/getflist',
+				{},
+				function(result)
+				{
+					$('#2Reports, #3Settings').unbind('click');
+					for(var idx in result)
+					{
+						var file = $('<div>');
+						file
+						.addClass('alert alert-info filediv')
+						.css({'height':'30px', 'padding-right':'10px'})
+						.attr('id', 'div___' + result[idx]['name'].replace('.', '__'));
+						file.html('Filename: ' + result[idx]['name'] + '&nbsp;&nbsp;Size: ' + result[idx]['size'] + ' bytes');
+						
+						var sButton = $('<button>');
+						sButton
+						.addClass('btn btn-success')
+						.css({'height':'30px', 'float':'right'})
+						.attr('id', 'btn___' + result[idx]['name'].replace('.', '__'))
+						.html('Send');
+						
+						sButton.unbind('click').bind('click',
+							function()
+							{
+								var pBar = $('<div>');
+								pBar
+								.addClass('progress')
+								.css({'width':'100%', 'margin-top':'25px'})
+								.append($('<div>').addClass('progress-bar'));
+								
+								var fid = $(this).attr('id').split('___')[1];
+								var thisBtn = $(this);
+								
+								// SEND START REQUEST
+								sendRequest
+								(
+									'ui/1Upload.1Upload_File/sendstart',
+									{'filename': fid.replace('__','.')},
+									function(result)
+									{
+										$('.btn').attr('disabled', 'disabled');
+										thisBtn.html('Sending').removeClass('btn-success').addClass('btn-info');
+										checkSendStatus();
+										$('#tab_1Upload_2Monitoring').click();
+									}
+								)								
+							}
+						);
+						
+						file.append(sButton);
+						
+						$('#fileList').append(file);
+					}
+				}
+			)
+		}
+	);
+	
+</script>
+
+<style type='text/css' >
+	.nav
+	{
+		margin-left: -45px !important;
+	}
+</style>
+
+<div id="fileList">
+	
+</div>

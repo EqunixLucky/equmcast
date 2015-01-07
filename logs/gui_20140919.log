@@ -1,0 +1,6 @@
+140919+150126.505|ERRO|Can't Connect: dbname=emv3 user=emv3 host=localhost port=5432
+140919+150127.321|ERRO|Can't Connect: dbname=emv3 user=emv3 host=localhost port=5432
+140919+150127.321|INFO|ajaxCall: (1Upload/1Upload_File)->getflist()
+140919+163422.207|ERRO|Can't Connect: dbname=emv3 user=emv3 host=localhost port=5432
+140919+163422.518|ERRO|Can't Connect: dbname=emv3 user=emv3 host=localhost port=5432
+140919+163422.519|INFO|ajaxCall: (1Upload/1Upload_File)->getflist()

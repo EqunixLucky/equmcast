@@ -1,0 +1,228 @@
+<script type="text/javascript">
+    $('#tab_4Reports_3Search').unbind('click').bind
+    (
+        'click',
+        function()
+        {
+            $('.datepicker').datepicker(
+                {format : 'dd/mm/yyyy'}
+            );
+            
+            sendRequest(
+                    'ajax/common/getJobList2',
+                    {'all':1},
+                    function(result)
+                    {						
+                            console.log(result);
+                            $("#searchJob").html('');
+                            var opt = $('<option>').val('0').html('Select Job');
+                            $("#searchJob").append(opt);
+                            for (idx in result['joblist']) {
+                                opt = $('<option>').val(result['joblist'][idx]['idjob']).html(result['joblist'][idx]['idjob'] + ' - ' + result['joblist'][idx]['jobname']);
+                                $("#searchJob").append(opt);
+                            }
+                            
+                    }
+            )
+            
+            sendRequest(
+                    'ajax/common/getUserList',
+                    {},
+                    function(result)
+                    {						
+                            //console.log(result);
+                            $("#searchUser").html('');
+                            var opt = $('<option>').val('0').html('All Users');
+                            $("#searchUser").append(opt);
+                            for (idx in result) {
+                                opt = $('<option>').val(result[idx]['idlogin']).html(result[idx]['idlogin'] + ' - ' + result[idx]['username']);
+                                $("#searchUser").append(opt);
+                            }
+                            
+                    }
+            )
+            
+            $('#btnSearch').click(function() {
+            
+                var arrJob = [];
+                $("#searchJob option").each(function()
+                    {
+                        if ($(this).attr('value') != '0') arrJob.push($(this).attr('value'));
+                    }
+                );
+                
+                if ($("#searchMax").val() == 0)
+                {
+                    alert('Please Select Max Result');
+                    return false;
+                }
+                
+                var params = {
+                        'searchRcData':$('#searchRcData').val(),
+                        'searchJob':$('#searchJob').val(),
+                        'searchStatus':$('#searchStatus').val(),
+                        'searchUser':$('#searchUser').val(),
+                        'searchDate':$('#searchDate').val(),
+                        'searchMax':$('#searchMax').val(),
+                        'arrJob':arrJob
+                    };
+                    
+                sendRequest(
+                    'ui/4Reports.3Search/getSearch',
+                    params,
+                    function(result)
+                    {
+                        console.log(result);
+                        $('div#searchView').html('');
+                        var rows = 0;
+                        var cols = result['header'].length;
+                        var headers = [];
+                        var tbl = $('<table>');
+                        var head = $('<tr>');
+                        var tmp = $('<th>').html('No.');
+                        
+                        head.append(tmp);
+                        for(idx=0;idx < cols;idx++)
+                        {
+                            var tmpArr = result['header'][idx].split('_');
+                            headers[idx] = tmpArr[1];
+                            tmp = $('<th>').html(tmpArr[0]);
+                            head.append(tmp);
+                        }
+                        tbl.append(head);
+                        
+                        for(idx in result['rows'])
+                        {
+                            if (result['rows'][idx] != undefined)
+                            {
+                                var row = $('<tr>');
+
+                                rows++;
+                                tmp = $('<td>').css('text-align','right').html(rows + '.');
+                                row.append(tmp);
+                                tbl.append(row);
+
+                                for(idx1=0;idx1 < cols;idx1++)
+                                {
+                                    tmp = $('<td>').html(result['rows'][idx][idx1]);
+                                    switch(headers[idx1])
+                                    {
+                                        case 'T':
+                                            tmp.css('text-align','left');
+                                            break;
+                                        case 'F':
+                                        case 'N':
+                                            tmp.css('text-align','right');
+                                            break;
+                                    }
+                                    row.append(tmp);
+                                }
+                                tbl.append(row);
+                            }
+                        }
+                        
+                        if (rows == 0)
+                        {
+                            tmp = $('<tr>');
+                            tmp.append($('<td>').attr('colspan',cols+1).html('No data to show'));
+                            tbl.append(tmp);
+                        }
+                        
+                        $('div#searchView').append(tbl);
+			$('div#searchView').append($('<span>').html('Total Data : ' + result['total']));
+                        
+                    }
+                )
+            }
+            );
+            
+        }
+    );
+</script>
+
+<style>
+    table.tblFilter tr th
+    {
+        text-align: right;
+        padding: 3px;
+        margin: 3px;
+    }
+    
+    table.tblFilter tr td
+    {
+        text-align: left;
+        padding: 3px;
+        margin: 3px;
+    }
+    
+    .datepicker
+    {
+        width: 80px;
+    }
+    
+    .datepicker.dropdown-menu
+    {
+        min-width: 180px;
+    }
+    
+    select {
+        height: 25px;
+        line-height: 25px;
+        font-size: 12px;
+    }
+    
+    div#searchView
+    {
+        margin: 10px 0;
+    }
+    
+    div#searchView table
+    {
+        width: 100%;
+    }
+    
+    div#searchView table tr td, div#searchView table tr th
+    {
+        border: 1px solid #C3C3C3;
+        padding: 5px;
+    }
+    
+</style>
+
+<table id="tblSearch" class="tblFilter">
+    <tr>
+        <td><input class="searchElem" type="text" placeholder="Data" id="searchRcData" style="width: 115px;" /></td>
+        <td>
+            <select class="searchElem" id="searchJob" style='width: 115px;'>
+            </select>
+        </td>
+        <td>
+            <select class="detailElem" id="searchStatus" style='width: 115px;'>
+                <option value="">All Status</option>
+                <option value="0">Printed</option>
+                <option value="200">Multi Printed</option>
+                <option value="10">Confirmed</option>
+                <option value="16">Not found</option>
+            </select>
+        </td>
+        <td>
+            <select class="searchElem" id="searchUser" style='width: 120px;'>
+            </select>
+        </td>
+        <td><input class="searchElem datepicker" type="text" placeholder="Date" id="searchDate" /></td>
+        <td>
+            <select class="searchElem" id="searchMax" style='width: 100px;'>
+                <option value="0">Max. Result</option>
+                <option value="50">50 rows</option>
+                <option value="100">100 rows</option>
+                <option value="200">200 rows</option>
+                <option value="500">500 rows</option>
+            </select>
+        </td>
+        <td><button id="btnSearch" class="btn btn-info">Search</button></td>
+    </tr>
+</table>
+
+<div id="searchView">
+    
+</div>

@@ -1,0 +1,142 @@
+
+UFTP version 4.5  Copyright (C) 2001-2014  Dennis A. Bush
+Starting at Wed Sep 17 18:52:22 2014
+Transfer rate: 2000000 Kbps (250000 KB/s)
+Wait between packets: 5 us
+Using private multicast address 230.5.5.204  Group ID: A26A0BC2
+Initializing group
+Sending ANNOUNCE 1
+Received REGISTER from client 0xC0A80065
+Sending REG_CONF 2.1
+Sending ANNOUNCE 2
+Sending ANNOUNCE 3
+Sending ANNOUNCE 4
+Sending ANNOUNCE 5
+Sending ANNOUNCE 6
+Sending ANNOUNCE 7
+Sending ANNOUNCE 8
+Sending ANNOUNCE 9
+Sending ANNOUNCE 10
+Sending ANNOUNCE 11
+Sending ANNOUNCE 12
+Sending ANNOUNCE 13
+Sending ANNOUNCE 14
+Sending ANNOUNCE 15
+Sending ANNOUNCE 16
+Sending ANNOUNCE 17
+Sending ANNOUNCE 18
+Sending ANNOUNCE 19
+Sending ANNOUNCE 20
+----- DSCF0549.MOV -----
+File ID: 0001  Name: DSCF0549.MOV
+  sending as: DSCF0549.MOV
+Bytes: 1101307648  Blocks: 847160  Sections: 82
+Sending FILEINFO 1.1
+Received FILEINFO_ACK from client 0xC0A80065
+Sending file
+Starting pass 1
+Sending section 0
+Sending section 1
+Sending section 2
+Sending section 3
+Sending section 4
+Sending section 5
+Sending section 6
+Sending section 7
+Sending section 8
+Sending section 9
+Sending section 10
+Sending section 11
+Sending section 12
+Sending section 13
+Sending section 14
+Sending section 15
+Sending section 16
+Sending section 17
+Sending section 18
+Sending section 19
+Sending section 20
+Sending section 21
+Sending section 22
+Sending section 23
+Sending section 24
+Sending section 25
+Sending section 26
+Sending section 27
+Sending section 28
+Sending section 29
+Sending section 30
+Sending section 31
+Sending section 32
+Sending section 33
+Sending section 34
+Got 6208 NAKs for section 33 from client 0xC0A80065
+Sending section 35
+Sending section 36
+Sending section 37
+Sending section 38
+Sending section 39
+Sending section 40
+Sending section 41
+Sending section 42
+Sending section 43
+Sending section 44
+Sending section 45
+Sending section 46
+Sending section 47
+Sending section 48
+Sending section 49
+Sending section 50
+Sending section 51
+Sending section 52
+Sending section 53
+Sending section 54
+Sending section 55
+Sending section 56
+Sending section 57
+Sending section 58
+Sending section 59
+Sending section 60
+Sending section 61
+Sending section 62
+Sending section 63
+Got 145 NAKs for section 62 from client 0xC0A80065
+Sending section 64
+Got 2101 NAKs for section 63 from client 0xC0A80065
+Sending section 65
+Sending section 66
+Sending section 67
+Sending section 68
+Sending section 69
+Sending section 70
+Sending section 71
+Sending section 72
+Sending section 73
+Sending section 74
+Sending section 75
+Sending section 76
+Sending section 77
+Sending section 78
+Sending section 79
+Sending section 80
+Sending section 81
+Sending DONE 1.1
+Sending DONE 2.1
+Starting pass 2
+Sending section 33
+Sending section 62
+Sending section 63
+Sending DONE 1.1
+Got COMPLETE from client 0xC0A80065
+Transfer status:
+Host: 0xC0A80065       Status: Completed   time:  95.194 seconds
+Total elapsed time: 95.194 seconds
+Overall throughput: 11297.97 KB/s
+-----------------------------
+Finishing group
+Sending DONE 1.1
+Got COMPLETE from client 0xC0A80065
+Late completions:
+Sending DONE_CONF 2.1
+Group complete
+equmcast: Finishing at Wed Sep 17 18:54:00 2014

@@ -1,0 +1,340 @@
+<script type="text/javascript">
+    $('#tab_4Reports_1Summary').unbind('click').bind
+    (
+        'click',
+        function()
+        {
+            $('.datepicker').datepicker(
+                {format : 'dd/mm/yyyy'}
+            );
+            
+            var jobIdList = [];
+            
+            $('.filterElem').attr('disabled','disabled');
+            $('#btnDL').attr('disabled','disabled');
+            
+            sendRequest(
+                    'ui/4Reports.1Summary/reportinit',
+                    {},
+                    function(result)
+                    {						
+                            //console.log(result);
+                            $("#filterRepType").html('');
+                            var optRep = $('<option>').val('0').html('Select Report');
+                            $("#filterRepType").append(optRep);
+                            for (idx in result) {
+                                optRep = $('<option>').val(result[idx]['id']).html(result[idx]['prompt']);
+                                optRep.data('id',result[idx]['id']);
+                                optRep.data('input',result[idx]['input']);
+                                $("#filterRepType").append(optRep);
+                            }
+                            
+                    }
+            )
+            
+            sendRequest(
+                    'ajax/overview/getJobList',
+                    {'all':'1'},
+                    function(result)
+                    {						
+                        console.log(result);
+                        $("#filterRepJob").html('');
+                        var optRep = $('<option>').val('0').html('All');
+                        $("#filterRepJob").append(optRep);
+                        for (idx in result['joblist']) {
+                            optRep = $('<option>').val(result['joblist'][idx]['idjob']).html(result['joblist'][idx]['idjob'] + ' - ' + result['joblist'][idx]['jobname']);
+                            $("#filterRepJob").append(optRep);
+                            jobIdList.push(result['joblist'][idx]['idjob']);
+                        }
+                    }
+            )
+            
+            sendRequest(
+                    'ajax/overview/getUserList',
+                    {},
+                    function(result)
+                    {						
+                            //console.log(result);
+                            $("#filterRepUser").html('');
+                            var optRep = $('<option>').val('0').html('All');
+                            $("#filterRepUser").append(optRep);
+                            for (idx in result) {
+                                optRep = $('<option>').val(result[idx]['idlogin']).html(result[idx]['username']);
+                                $("#filterRepUser").append(optRep);
+                            }
+                            
+                    }
+            )
+            
+            $('#filterRepType').change(function() {
+                //alert($(this).find('option:selected').data('input'));
+                $('#filterRepDate1').val('');
+                $('#filterRepDate2').val('');
+                $('#filterRepUser').val(0);
+                $('#filterRepJob').val(0);
+                $('#filterRepJobStat').val(0);
+                $('.filterElem').attr('disabled','disabled');
+                $($(this).find('option:selected').data('input')).removeAttr('disabled');
+                
+                if ($(this).val() == 3) //kalau Job Detail hanya bisa download
+                {
+                    $('#btnRep').attr('disabled','disabled');
+                    $('#btnDL').removeAttr('disabled');
+                }
+                else
+                {
+                    $('#btnRep').removeAttr('disabled');
+                    $('#btnDL').attr('disabled','disabled');
+                }
+            }
+            );
+            
+            $('#btnDL').click(function() {
+                if ($('#filterRepJob').val() != '0') jobIdList = [$('#filterRepJob').val()];
+                var params = {
+                        'id':$('#filterRepType').val(),
+                        'filterRepDate1':$('#filterRepDate1').val(),
+                        'filterRepDate2':$('#filterRepDate2').val(),
+                        'filterRepJob':$('#filterRepJob').val(),
+                        'jobName':$('#filterRepJob option:selected').html(),
+                        'jobIdList':jobIdList.join(),
+                        'filterRepUser':$('#filterRepUser').val(),
+                        'userName':$('#filterRepUser option:selected').html(),
+                        'filterRepJobStat':$('#filterRepJobStat').val(),
+                        'jobStat':$('#filterRepJobStat option:selected').html()
+                    };
+                console.log(params);
+                sendRequest(
+                    'ui/4Reports.1Summary/downloadReport',
+                    params,
+                    function(result)
+                    {
+                        console.log(result);
+                        window.location = 'static/download/' + result.toString();
+                    }
+                )
+            }
+            );
+            
+            $('#btnRep').click(function() {
+                if ($('#filterRepType').val() == 0)
+                {
+                    alert('Please select report');
+                    return false;
+                }
+                
+                if ($('#filterRepJob').val() != '0') jobIdList = [$('#filterRepJob').val()];
+
+                var params = {
+                        'id':$('#filterRepType').val(),
+                        'jobIdList':jobIdList.join(),
+                        'filterRepDate1':$('#filterRepDate1').val(),
+                        'filterRepDate2':$('#filterRepDate2').val(),
+                        'filterRepJob':$('#filterRepJob').val(),
+                        'filterRepUser':$('#filterRepUser').val(),
+                        'filterRepJobStat':$('#filterRepJobStat').val()
+                    };
+                    
+                sendRequest(
+                    'ui/4Reports.1Summary/reportquery',
+                    params,
+                    function(result)
+                    {
+                        console.log(result);
+                        
+                        $('div#repView').html('');
+                        var rows = 0;
+                        var cols = result['header'].length;
+                        var headers = [];
+                        var tbl = $('<table>');
+                        var head = $('<tr>');
+                        var tmp = $('<th>').html('No.');
+                        
+                        head.append(tmp);
+                        for(idx=0;idx < cols;idx++)
+                        {
+                            var tmpArr = result['header'][idx].split('_');
+                            headers[idx] = tmpArr[1];
+                            tmp = $('<th>').html(tmpArr[0]);
+                            head.append(tmp);
+                        }
+                        tbl.append(head);
+                        
+                        for(idx in result['rows'])
+                        {
+                            if (result['rows'][idx] != undefined)
+                            {
+                                var row = $('<tr>');
+
+                                rows++;
+                                tmp = $('<td>').css('text-align','right').html(rows + '.');
+                                row.append(tmp);
+                                tbl.append(row);
+
+                                for(idx1=0;idx1 < cols;idx1++)
+                                {
+                                    tmp = $('<td>').html(result['rows'][idx][idx1]);
+                                    switch(headers[idx1])
+                                    {
+                                        case 'T':
+                                            tmp.css('text-align','left');
+                                            break;
+                                        case 'F':
+                                        case 'N':
+                                            tmp.css('text-align','right');
+                                            break;
+                                    }
+                                    row.append(tmp);
+                                }
+                                tbl.append(row);
+                            }
+                        }
+                        
+                        if (rows == 0)
+                        {
+                            tmp = $('<tr>');
+                            tmp.append($('<td>').attr('colspan',cols+1).html('No data to show'));
+                            tbl.append(tmp);
+                        }
+                        
+                        $('div#repView').append(tbl);
+                        
+                        $('.filterElem').attr('disabled','disabled');
+                        $('#filterRepType').attr('disabled','disabled');
+                        $('#btnRep').attr('disabled','disabled');
+                        $('#btnDL').removeAttr('disabled');
+                    }
+                )
+            }
+            );
+            
+            $('#btnReset').click(function() {
+                $('#filterRepType').val(0);
+                $('#filterRepDate1').val('');
+                $('#filterRepDate2').val('');
+                $('#filterRepUser').val(0);
+                $('#filterRepJob').val(0);
+                $('#filterRepJobStat').val(0);
+                
+                $('.filterElem').attr('disabled','disabled');
+                $('#filterRepType').removeAttr('disabled');
+                $('#btnRep').removeAttr('disabled');
+                $('#btnDL').attr('disabled','disabled');
+                
+                $('div#repView').html('');
+            }
+            );
+            
+        }
+    );
+</script>
+
+<style>
+    input [type='text']
+    {
+        font-size: 12px !important;
+        height: 25px !important;
+        line-height: 25px !important;
+    }
+    
+    table.tblFilter tr th
+    {
+        text-align: right;
+        padding: 3px;
+        margin: 3px;
+    }
+    
+    table.tblFilter tr td
+    {
+        text-align: left;
+        padding: 3px;
+        margin: 3px;
+    }
+    
+    .datepicker
+    {
+        width: 80px;
+    }
+    
+    .datepicker.dropdown-menu
+    {
+        min-width: 180px;
+    }
+    
+    select {
+        height: 25px;
+        line-height: 25px;
+        font-size: 12px;
+    }
+    
+    div#repView
+    {
+        margin: 10px 0;
+    }
+    
+    div#repView table
+    {
+        width: 100%;
+    }
+    
+    div#repView table tr td, div#repView table tr th
+    {
+        border: 1px solid #C3C3C3;
+        padding: 5px;
+    }
+    
+</style>
+
+<table id="tblFilter" class="tblFilter">
+    <tr>
+        <th>Report :</th>
+        <td colspan="7">
+            <select id="filterRepType" style='width: 700px;'>
+                <option>-- Choose Report --</option>
+                <option>Report 1</option>
+                <option>Report 2</option>
+                <option>Report 3</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <th>Date :</th>
+        <td><input id='filterRepDate1' type='text' class='filterElem datepicker' /> to <input id='filterRepDate2' type='text' class='filterElem datepicker' /></td>
+        <td style='width:30px;'>&nbsp;</td>
+        <th>Job :</th>
+        <td>
+            <select class="filterElem" id="filterRepJob" style='width: 200px;'>
+                <option>All</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <th>Operator :</th>
+        <td>
+            <select class="filterElem" id="filterRepUser">
+                <option>All</option>
+            </select>
+        </td>
+        <td style='width:30px;'>&nbsp;</td>
+        <th>Status :</th>
+        <td>
+            <select class="filterElem" id="filterRepJobStat" style='width: 126px;'>
+                <option value='0'>All</option>
+                <option value='1'>New</option>
+                <option value='2'>Run</option>
+                <option value='3'>Stop</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="5" style="text-align: right;">
+            <button id="btnRep" class="btn btn-info">View</button>
+            <button id="btnDL" class="btn btn-info">Download</button>
+            <button id="btnReset" class="btn btn-inverse">Reset</button>
+      </td>
+    </tr>
+</table>
+
+<div id="repView">
+    
+</div>

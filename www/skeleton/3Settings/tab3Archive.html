@@ -1,0 +1,51 @@
+<script type='text/javascript'>
+$('#tab_3Settings_3Archive').unbind('click').bind
+(
+        'click',
+        function()
+        {
+		$('.datepicker').datepicker(
+			{format : 'dd-mm-yyyy'}
+		);
+
+		$('#btnArchive').unbind('click').bind(
+			'click',
+			function() {
+				var url = 'download/3Settings.3Archive/archive/' + $('#arcFromDate').val() + '/' + $('#arcToDate').val();
+				window.open(url);
+				//$('#btnArchive').attr('disabled','disabled');
+				//$('#btnArchive').text('Archiving');
+				//sendRequest(
+				//	'ui/3Settings.3Archive/archive',
+				//	{
+				//		'from':$('#arcFromDate').val(),
+				//		'to'  :$('#arcToDate').val()
+				//	},
+				//	function(result)
+				//	{
+				//		//keeploop = result['finish'];
+				//		alert(result['filename']);
+				//	}
+				//);
+				//$('#btnArchive').text('Archive Data');
+				//$('#btnArchive').removeAttr('disabled');
+			}
+		);
+		
+	}
+);
+</script>
+
+<h3>Archive</h3>
+<table class='table' >
+<tr>
+<td >
+	From&nbsp;&nbsp;
+	<input type="text" id="arcFromDate" placeholder="Date" class="datepicker">&nbsp;&nbsp;
+	to&nbsp;&nbsp;
+	<input type="text" id="arcToDate" placeholder="Date" class="datepicker">&nbsp;&nbsp;
+	<button class='btn btn-info' style='width: 150px' id='btnArchive'>Archive Data</button>
+</td>
+</tr>
+</table>
+<center><hr style="width: 70%;"/></center>
